@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:instagramclone/screens/sign_up_screen.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:instagramclone/widgets/text_field_input.dart';
 
@@ -88,7 +89,11 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SignupScreen(),
+                ),
+              ),
               child: Container(
                 child: const Text(
                   "Sign up",
