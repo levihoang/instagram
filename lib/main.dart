@@ -27,6 +27,25 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+
+// Edit error screen
+  ErrorWidget.builder = (FlutterErrorDetails details) => Material(
+        child: Container(
+          color: Colors.green,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                details.exception.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+              )
+            ],
+          ),
+        ),
+      );
+
   runApp(const MyApp());
 }
 
