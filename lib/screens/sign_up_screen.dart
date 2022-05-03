@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/resources/auth_methods.dart';
+import 'package:instagramclone/responsive/mobile_layout_screen.dart';
+import 'package:instagramclone/responsive/responsive_layout_screen.dart';
+import 'package:instagramclone/responsive/web_layout_screen.dart';
 import 'package:instagramclone/screens/login_screen.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:instagramclone/utils/utils.dart';
@@ -48,13 +51,15 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = false;
     });
 
-    showSnackBar(res, context);
-
-    // if (res == 'success') {
-    //   showSnackBar(res, context);
-    // } else {
-    //   //
-    // }
+    if (res != 'success') {
+      showSnackBar(res, context);
+    } else {
+      //
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+              webScreenLayout: WebScreenLayout(),
+              mobileScreenLayout: MobileScreenLayout())));
+    }
   }
 
   @override
@@ -65,6 +70,14 @@ class _SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+  }
+
+  void navigateToLogin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -182,11 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),
             GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
-                ),
-              ),
+              onTap: navigateToLogin,
               child: Container(
                 child: const Text(
                   ' Login.',
