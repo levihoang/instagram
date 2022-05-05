@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:instagramclone/responsive/web_layout_screen.dart';
 import 'package:instagramclone/screens/add_post_screen.dart';
+import 'package:instagramclone/screens/feed_screen.dart';
 
-const WebScreenSize = 600;
+const webScreenSize = 600;
 
 const homeScreenItems = [
-  Text('feed'),
+  FeedScreen(),
   Text('search'),
   AddPostScreen(),
   Text('notif'),
