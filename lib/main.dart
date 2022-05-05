@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -29,22 +31,25 @@ void main() async {
   }
 
 // Edit error screen
-  ErrorWidget.builder = (FlutterErrorDetails details) => Material(
-        child: Container(
-          color: Colors.green,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                details.exception.toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
-              )
-            ],
-          ),
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    log(details.exception.toString());
+    return Material(
+      child: Container(
+        color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              details.exception.toString(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.white),
+            )
+          ],
         ),
-      );
+      ),
+    );
+  };
 
   runApp(const MyApp());
 }
