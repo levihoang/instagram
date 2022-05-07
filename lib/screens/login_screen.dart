@@ -143,9 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
             )
           ],
         )
-        // text field input for password
-        // button login
-        // transitioning to signing up
       ]),
     )));
   }

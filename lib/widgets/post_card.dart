@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:instagramclone/utils/colors.dart';
+import 'package:intl/intl.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({Key? key}) : super(key: key);
+  final snap;
+  const PostCard({Key? key, required this.snap}) : super(key: key);
+
+  static const String defaultAvtUrl =
+      'https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg';
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +21,10 @@ class PostCard extends StatelessWidget {
                   .copyWith(right: 0),
               // ignore: prefer_const_literals_to_create_immutables
               child: Row(children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 16,
-                  backgroundImage: NetworkImage(
-                      "https://image.thanhnien.vn/w1024/Uploaded/2022/znetns/2022_04_29/son-tung-1-4956.jpg"),
+                  backgroundImage:
+                      NetworkImage(snap["profImage"] ?? defaultAvtUrl),
                 ),
                 Expanded(
                     child: Padding(
@@ -27,9 +32,9 @@ class PostCard extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(' sontungmtp',
-                          style: TextStyle(fontWeight: FontWeight.bold))
+                    children: [
+                      Text(snap['username'],
+                          style: const TextStyle(fontWeight: FontWeight.bold))
                     ],
                   ),
                 )),
@@ -64,7 +69,7 @@ class PostCard extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.35,
               width: double.infinity,
               child: Image.network(
-                "https://image.thanhnien.vn/w1024/Uploaded/2022/znetns/2022_04_29/son-tung-1-4956.jpg",
+                snap["postUrl"],
                 fit: BoxFit.cover,
               ),
             ),
@@ -113,7 +118,7 @@ class PostCard extends StatelessWidget {
                         .subtitle2!
                         .copyWith(fontWeight: FontWeight.w800),
                     child: Text(
-                      '1,231 likes',
+                      "${snap['likes'].length} likes",
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ),
@@ -121,16 +126,16 @@ class PostCard extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.only(top: 8),
                     child: RichText(
-                      text: const TextSpan(
-                          style: TextStyle(color: primaryColor),
+                      text: TextSpan(
+                          style: const TextStyle(color: primaryColor),
                           children: [
                             TextSpan(
-                                text: 'G Dragon',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: ' '),
+                                text: snap['username'],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            const TextSpan(text: ' '),
                             TextSpan(
-                              text:
-                                  'Bigbang is still the greatest group in performing live',
+                              text: snap['description'],
                             ),
                           ]),
                     ),
@@ -146,9 +151,12 @@ class PostCard extends StatelessWidget {
                   ),
                   Container(
                       padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: const Text(
-                        '12/11/2001',
-                        style: TextStyle(fontSize: 16, color: secondaryColor),
+                      child: Text(
+                        DateFormat.yMMMd().format(
+                          snap['datePublished'].toDate(),
+                        ),
+                        style: const TextStyle(
+                            fontSize: 16, color: secondaryColor),
                       )),
                 ],
               ),

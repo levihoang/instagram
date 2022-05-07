@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:instagramclone/providers/user_provider.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:instagramclone/utils/global_variables.dart';
-import 'package:provider/provider.dart';
-import 'package:instagramclone/models/user.dart' as model;
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -41,17 +38,13 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
   @override
   Widget build(BuildContext context) {
-    model.User? user = Provider.of<UserProvider>(context).getUser!;
-
+    // model.User? user = Provider.of<UserProvider>(context).getUser!;
     return Scaffold(
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
-
         // Tại sao lại dùng utils mà kh ghi trực tiếp ở đây ??
         children: homeScreenItems,
         controller: pageController,
-
-        // Chỉ đổi khi có sự thay đổi
         onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: CupertinoTabBar(

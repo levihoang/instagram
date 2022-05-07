@@ -2,12 +2,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagramclone/models/user.dart';
-import 'package:instagramclone/providers/user_provider.dart';
 import 'package:instagramclone/resources/firestore_methods.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:instagramclone/utils/utils.dart';
 import 'package:provider/provider.dart';
+
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -181,7 +182,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _descriptionController.dispose();
   }
