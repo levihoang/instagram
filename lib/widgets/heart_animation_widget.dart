@@ -5,13 +5,15 @@ class HeartAnimationWidget extends StatefulWidget {
   final bool isAnimating;
   final Duration duration;
   final VoidCallback? onEnd;
+  final bool alwaysAnimate;
 
   const HeartAnimationWidget(
       {Key? key,
       required this.child,
       required this.isAnimating,
       this.duration = const Duration(milliseconds: 150),
-      this.onEnd})
+      this.onEnd,
+      this.alwaysAnimate = false})
       : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
   void didUpdateWidget(covariant HeartAnimationWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.isAnimating != oldWidget.isAnimating) {
+    if (widget.isAnimating != oldWidget.isAnimating || widget.alwaysAnimate) {
       doAnimation();
     }
   }
@@ -47,13 +49,11 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
     await controller.forward();
     await controller.reverse();
     await Future.delayed(const Duration(milliseconds: 100));
-
     widget.onEnd!();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     controller.dispose();
   }
