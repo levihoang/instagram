@@ -26,6 +26,9 @@ class PostCard extends StatelessWidget {
                   backgroundImage:
                       NetworkImage(snap["profImage"] ?? defaultAvtUrl),
                 ),
+                const SizedBox(
+                  width: 5,
+                ),
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.only(left: 0),
@@ -92,7 +95,6 @@ class PostCard extends StatelessWidget {
                     onPressed: () {},
                     icon: const Icon(
                       Icons.send,
-                      color: Colors.red,
                     )),
                 const Expanded(
                   child: Align(
