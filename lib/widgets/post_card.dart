@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:intl/intl.dart';
 
-import 'like_animation_widget.dart';
+import 'like_animation.dart';
 
 class PostCard extends StatefulWidget {
   final snap;

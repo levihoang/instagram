@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../widgets/like_animation_widget.dart';
+import '../widgets/like_animation.dart';
 
 class Temp extends StatefulWidget {
   const Temp({Key? key}) : super(key: key);
