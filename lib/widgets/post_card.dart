@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:intl/intl.dart';
 
-class PostCard extends StatelessWidget {
+import 'like_animation_widget.dart';
+
+class PostCard extends StatefulWidget {
   final snap;
   const PostCard({Key? key, required this.snap}) : super(key: key);
 
@@ -10,7 +12,16 @@ class PostCard extends StatelessWidget {
       'https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg';
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLiked = false;
+  bool isHeartAnimating = false;
+  @override
   Widget build(BuildContext context) {
+    final icon = isLiked ? Icons.favorite : Icons.favorite_outline;
+    final hearIconColor = isLiked ? Colors.red : Colors.white;
     return Container(
         color: mobileBackgroundColor,
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -23,8 +34,8 @@ class PostCard extends StatelessWidget {
               child: Row(children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage:
-                      NetworkImage(snap["profImage"] ?? defaultAvtUrl),
+                  backgroundImage: NetworkImage(
+                      widget.snap["profImage"] ?? PostCard.defaultAvtUrl),
                 ),
                 const SizedBox(
                   width: 5,
@@ -36,7 +47,7 @@ class PostCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(snap['username'],
+                      Text(widget.snap['username'],
                           style: const TextStyle(fontWeight: FontWeight.bold))
                     ],
                   ),
@@ -68,24 +79,55 @@ class PostCard extends StatelessWidget {
                     icon: const Icon(Icons.more_vert)),
               ]),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.35,
-              width: double.infinity,
-              child: Image.network(
-                snap["postUrl"],
-                fit: BoxFit.cover,
-              ),
+            GestureDetector(
+              child: Stack(alignment: Alignment.center, children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.snap["postUrl"],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                AnimatedOpacity(
+                  opacity: isHeartAnimating ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: LikeAnimation(
+                    isAnimating: isHeartAnimating,
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: 100,
+                    ),
+                    duration: const Duration(microseconds: 400),
+                    onEnd: () => setState(() {
+                      isHeartAnimating = false;
+                      isLiked = true;
+                    }),
+                  ),
+                )
+              ]),
+              onDoubleTap: () {
+                setState(() {
+                  isHeartAnimating = true;
+                  isLiked = true;
+                });
+              },
             ),
 
             // LIKE COMMENT SECTION
             Row(
               children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    )),
+                LikeAnimation(
+                  isAnimating: isLiked,
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                      icon: Icon(icon, color: hearIconColor)),
+                ),
                 IconButton(
                     onPressed: () {},
                     icon: const Icon(
@@ -120,7 +162,7 @@ class PostCard extends StatelessWidget {
                         .subtitle2!
                         .copyWith(fontWeight: FontWeight.w800),
                     child: Text(
-                      "${snap['likes'].length} likes",
+                      "${widget.snap['likes'].length} likes",
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ),
@@ -132,12 +174,12 @@ class PostCard extends StatelessWidget {
                           style: const TextStyle(color: primaryColor),
                           children: [
                             TextSpan(
-                                text: snap['username'],
+                                text: widget.snap['username'],
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
                             const TextSpan(text: ' '),
                             TextSpan(
-                              text: snap['description'],
+                              text: widget.snap['description'],
                             ),
                           ]),
                     ),
@@ -155,7 +197,7 @@ class PostCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Text(
                         DateFormat.yMMMd().format(
-                          snap['datePublished'].toDate(),
+                          widget.snap['datePublished'].toDate(),
                         ),
                         style: const TextStyle(
                             fontSize: 16, color: secondaryColor),

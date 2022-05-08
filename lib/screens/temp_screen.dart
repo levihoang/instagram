@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../widgets/heart_animation_widget.dart';
+import '../widgets/like_animation_widget.dart';
 
 class Temp extends StatefulWidget {
   const Temp({Key? key}) : super(key: key);
@@ -34,16 +34,17 @@ class _TempState extends State<Temp> {
               url,
               fit: BoxFit.cover,
             ),
-            Opacity(
+            AnimatedOpacity(
               opacity: isHeartAnimating ? 1 : 0,
-              child: HeartAnimationWidget(
+              duration: const Duration(milliseconds: 200),
+              child: LikeAnimation(
                 isAnimating: isHeartAnimating,
                 child: const Icon(
                   Icons.favorite,
                   color: Colors.red,
                   size: 100,
                 ),
-                duration: const Duration(microseconds: 700),
+                duration: const Duration(microseconds: 400),
                 onEnd: () => setState(() {
                   isHeartAnimating = false;
                   isLiked = true;
@@ -58,7 +59,7 @@ class _TempState extends State<Temp> {
             });
           },
         ),
-        HeartAnimationWidget(
+        LikeAnimation(
             child: IconButton(
               icon: Icon(icon, color: hearIconColor),
               onPressed: () {
