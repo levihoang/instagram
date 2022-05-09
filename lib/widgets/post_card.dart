@@ -1,3 +1,4 @@
+import 'package:bitmap/bitmap.dart';
 import 'package:flutter/material.dart';
 
 import 'package:instagramclone/resources/firestore_methods.dart';
@@ -23,6 +24,10 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool isLiked = false;
   bool isHeartAnimating = false;
+
+  Future<Bitmap> bitmap(networkImage) async {
+    return await Bitmap.fromProvider(networkImage);
+  }
 
   @override
   @override
@@ -145,9 +150,11 @@ class _PostCardState extends State<PostCard> {
                           color: Colors.white)),
                 ),
                 IconButton(
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const CommentScreen())),
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CommentScreen(
+                                  snap: widget.snap,
+                                ))),
                     icon: const Icon(
                       Icons.comment_outlined,
                     )),
