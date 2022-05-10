@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animated_splash_screen: ^1.2.0
+  bitmap: ^0.1.2
   cloud_firestore: ^3.1.13
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.3.16
