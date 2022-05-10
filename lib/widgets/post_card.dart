@@ -1,9 +1,11 @@
 import 'package:bitmap/bitmap.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:instagramclone/resources/firestore_methods.dart';
 import 'package:instagramclone/screens/comment_screen.dart';
 import 'package:instagramclone/utils/colors.dart';
+import 'package:instagramclone/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:instagramclone/models/user.dart' as model;
@@ -24,6 +26,28 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool isLiked = false;
   bool isHeartAnimating = false;
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchCommentLen();
+  }
+
+  fetchCommentLen() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentLen = snap.docs.length;
+    } catch (err) {
+      showSnackBar(err.toString(), context);
+    }
+    setState(() {});
+  }
 
   Future<Bitmap> bitmap(networkImage) async {
     return await Bitmap.fromProvider(networkImage);
@@ -213,9 +237,10 @@ class _PostCardState extends State<PostCard> {
                     onTap: () {},
                     child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: const Text(
-                          'View all 211 comments',
-                          style: TextStyle(fontSize: 16, color: secondaryColor),
+                        child: Text(
+                          'View all $commentLen comments',
+                          style: const TextStyle(
+                              fontSize: 16, color: secondaryColor),
                         )),
                   ),
                   Container(
