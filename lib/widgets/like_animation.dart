@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 
-class HeartAnimationWidget extends StatefulWidget {
+class LikeAnimation extends StatefulWidget {
   final Widget child;
   final bool isAnimating;
   final Duration duration;
   final VoidCallback? onEnd;
+  final bool smallLike;
 
-  const HeartAnimationWidget(
+  const LikeAnimation(
       {Key? key,
       required this.child,
       required this.isAnimating,
       this.duration = const Duration(milliseconds: 150),
-      this.onEnd})
+      this.onEnd,
+      this.smallLike = false})
       : super(key: key);
 
   @override
-  State<HeartAnimationWidget> createState() => _HeartAnimationWidgetState();
+  State<LikeAnimation> createState() => _LikeAnimationState();
 }
 
-class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
+class _LikeAnimationState extends State<LikeAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scale;
+
   @override
   void initState() {
     super.initState();
-
     final halfDuration = widget.duration.inMicroseconds;
-
     controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: halfDuration));
 
@@ -35,25 +36,25 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
   }
 
   @override
-  void didUpdateWidget(covariant HeartAnimationWidget oldWidget) {
+  void didUpdateWidget(covariant LikeAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.isAnimating != oldWidget.isAnimating) {
-      doAnimation();
+    if (widget.isAnimating != oldWidget.isAnimating || widget.smallLike) {
+      if (widget.onEnd != null) {
+        startAnimation();
+      }
     }
   }
 
-  Future doAnimation() async {
+  Future startAnimation() async {
     await controller.forward();
     await controller.reverse();
-    await Future.delayed(const Duration(milliseconds: 100));
-
+    await Future.delayed(const Duration(milliseconds: 200));
     widget.onEnd!();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     controller.dispose();
   }
