@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagramclone/resources/auth_methods.dart';
+import 'package:instagramclone/resources/firestore_methods.dart';
+import 'package:instagramclone/screens/login_screen.dart';
 import 'package:instagramclone/utils/colors.dart';
 import 'package:instagramclone/utils/utils.dart';
 import '../widgets/follow_button.dart';
@@ -44,10 +47,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .then((snapshot) {
         postLen = snapshot.docs.length;
       });
-      userData = userSnap.data()!;
 
+      userData = userSnap.data()!;
       followerLen = userSnap.data()!['followers'].length;
       followingLen = userSnap.data()!['following'].length;
+
+      isFollowing = userSnap
+          .data()!['followers']
+          .contains(FirebaseAuth.instance.currentUser!.uid);
+
       setState(() {});
     } catch (err) {
       showSnackBar(err.toString(), context);
@@ -101,32 +109,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    FirebaseAuth.instance.currentUser!.uid !=
+                                    FirebaseAuth.instance.currentUser!.uid ==
                                             widget.uid
-                                        ? const FollowButton(
-                                            text: 'Edit Profile',
+                                        ? FollowButton(
+                                            text: 'Sign out',
                                             backgroundColor:
                                                 mobileBackgroundColor,
                                             textColor: primaryColor,
                                             borderColor: Colors.grey,
-                                            function: null,
+                                            function: () async {
+                                              await AuthMethods().signOut();
+                                              Navigator.of(context).pushReplacement(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const LoginScreen()));
+                                            },
                                           )
                                         : isFollowing
-                                            ? const FollowButton(
+                                            ? FollowButton(
                                                 text: 'Unfollow',
                                                 backgroundColor:
                                                     mobileBackgroundColor,
                                                 textColor: primaryColor,
                                                 borderColor: Colors.grey,
-                                                function: null,
+                                                function: () async {
+                                                  await FireStoreMethods()
+                                                      .followUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          userData['uid']);
+                                                  setState(() {
+                                                    isFollowing = false;
+                                                  });
+                                                },
                                               )
-                                            : const FollowButton(
+                                            : FollowButton(
                                                 text: 'Follow',
                                                 backgroundColor: blueColor,
                                                 textColor: Colors.white,
                                                 borderColor: blueColor,
-                                                function: null,
-                                              )
+                                                function: () async {
+                                                  await FireStoreMethods()
+                                                      .followUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          userData['uid']);
+                                                  setState(() {
+                                                    isFollowing = true;
+                                                    followerLen++;
+                                                  });
+                                                })
                                   ],
                                 ),
                                 Container(
