@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       var postSnap = FirebaseFirestore.instance
           .collection('posts')
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('uid', isEqualTo: widget.uid)
           .get()
           .then((snapshot) {
         postLen = snapshot.docs.length;
@@ -140,6 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           userData['uid']);
                                                   setState(() {
                                                     isFollowing = false;
+                                                    followerLen--;
                                                   });
                                                 },
                                               )
@@ -210,12 +211,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             DocumentSnapshot snap =
                                 (snapshot.data as dynamic).docs[index];
 
-                            return Container(
-                              child: Image(
-                                image: NetworkImage(
-                                    (snap.data()! as dynamic)['postUrl']),
-                                fit: BoxFit.cover,
-                              ),
+                            return Image(
+                              image: NetworkImage(
+                                  (snap.data()! as dynamic)['postUrl']),
+                              fit: BoxFit.cover,
                             );
                           });
                     }),
