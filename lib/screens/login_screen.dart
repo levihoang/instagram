@@ -130,7 +130,9 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),
             GestureDetector(
-              onTap: () => navigateToSignUp,
+              onTap: () {
+                return navigateToSignUp();
+              },
               child: Container(
                 child: const Text(
                   "Sign up",
