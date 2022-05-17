@@ -1,5 +1,6 @@
 import 'package:bitmap/bitmap.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:instagramclone/resources/firestore_methods.dart';
@@ -43,6 +44,18 @@ class _PostCardState extends State<PostCard> {
           .collection('comments')
           .get();
       commentLen = snap.docs.length;
+
+      var snapLike = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .get();
+
+      String currentUid = FirebaseAuth.instance.currentUser!.uid;
+      List arr = (snapLike.data()! as dynamic)['likes'];
+      if (arr.contains(currentUid)) {
+        isLiked = true;
+      }
+      // print((snapLike.data()! as dynamic).docs.length);
     } catch (err) {
       showSnackBar(err.toString(), context);
     }
@@ -150,10 +163,12 @@ class _PostCardState extends State<PostCard> {
                 if (!isLiked) {
                   await FireStoreMethods().likePost(
                       widget.snap['postId'], user.uid, widget.snap['likes']);
+                  setState(() {
+                    isLiked = true;
+                  });
                 }
                 setState(() {
                   isHeartAnimating = true;
-                  isLiked = true;
                 });
               },
             ),
